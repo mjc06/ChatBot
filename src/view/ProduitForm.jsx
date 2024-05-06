@@ -3,16 +3,18 @@ import { useParams, useNavigate } from "react-router-dom";
 import axiosClient from './../axios';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 
-export default function UserForm(){
+export default function ProduitForm(){
     const {id} = useParams()
     const navigate = useNavigate()
     const {setNotification} = useStateContext()
-    const [user,setUser] = useState({
+    const [produit,setProduit] = useState({
         id: null,
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: ''
+        nom: '',
+        description:'',
+        categorie: '',
+        prix: '',
+        marque: '',
+        lien_redirection: '',
     })
     const [errors,setErrors] = useState('')
     const [loading,setLoading] = useState(false)
@@ -20,10 +22,10 @@ export default function UserForm(){
     if (id) {
         useEffect(() => {
             setLoading(true)
-            axiosClient.get(`/users/${id}`)
-            .then(({data})=> {
+            axiosClient.get(`/produits/${id}`)
+            .then(({data}) => {
                 setLoading(false)
-                setUser(data)
+                setProduit(data)
             })
             .catch(() => {
                 setLoading(false)
@@ -33,11 +35,11 @@ export default function UserForm(){
 
    const onSubmit = (event) => {
         event.preventDefault()
-        if (user.id) {
-            axiosClient.put(`/users/${user.id}`, user)
+        if (produit.id) {
+            axiosClient.put(`/produits/${produit.id}`, produit)
             .then(() => {
-                setNotification('Utilisateur mis à jour avec succès')
-                navigate('/users')
+                setNotification('Produit mis à jour avec succès')
+                navigate('/produits')
             })
             .catch(err => {
                 const response = err.response
@@ -46,10 +48,10 @@ export default function UserForm(){
                 }
             })
         } else {
-            axiosClient.post(`/users`, user)
+            axiosClient.post(`/produits`, produit)
             .then(() => {
-                setNotification('Utilisateur ajouter avec succès')
-                navigate('/users')
+                setNotification('Produit ajouter avec succès')
+                navigate('/produits')
             })
             .catch(err => {
                 const response = err.response
@@ -62,8 +64,8 @@ export default function UserForm(){
 
     return (
         <>       
-            {user.id && <h1>Mise à jour de l'utilisateur {user.name}</h1>}
-            {!user.id && <h1>Nouveau Utilisateur</h1>}
+            {produit.id && <h1>Mise à jour de {produit.nom}</h1>}
+            {!produit.id && <h1>Nouveau Produit</h1>}
             <div className="card animated fadeInDown">
                 {
                     loading && (
@@ -81,10 +83,12 @@ export default function UserForm(){
                 {
                     !loading && (
                         <form onSubmit={onSubmit}>
-                            <input value={user.name} onChange={e => setUser({...user,name: e.target.value})} type='text' placeholder='Nom et prénoms' />
-                            <input value={user.email} onChange={e => setUser({...user,email: e.target.value})} type='email' placeholder='Email' />
-                            <input onChange={e => setUser({...user,password: e.target.value})} type='password' placeholder='Mot de Passe' />
-                            <input onChange={e => setUser({...user,password_confirmation: e.target.value})} type='password' placeholder='Confirmation mot de passe' />
+                            <input value={produit.nom} onChange={e => setProduit({...produit,nom: e.target.value})} type='text' placeholder='Nom du produit' />
+                            <input value={produit.description} onChange={e => setProduit({...produit,description: e.target.value})} type='text' placeholder='descriptioon' />
+                            <input value={produit.categorie} onChange={e => setProduit({...produit,categorie: e.target.value})} type='text' placeholder='categorie' />
+                            <input value={produit.prix} onChange={e => setProduit({...produit,prix: e.target.value})} type='text' placeholder='prix' />
+                            <input value={produit.marque} onChange={e => setProduit({...produit,marque: e.target.value})} type='text' placeholder='marque du produit' />
+                            <input value={produit.lien_redirection} onChange={e => setProduit({...produit,lien_redirection: e.target.value})} type='text' placeholder='lien_redirection' />
                             <button className='button-ajout'>Save</button>
                         </form>
                     )

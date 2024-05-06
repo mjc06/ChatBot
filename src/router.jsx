@@ -2,11 +2,17 @@ import {createBrowserRouter, Navigate} from 'react-router-dom';
 import Login from './view/Login.jsx';
 import Signup from './view/Signup.jsx';
 import Users from './view/Users.jsx';
+import Produits from './view/Produits.jsx';
+import Messages from './view/Messages.jsx';
+import Questions from './view/Questions.jsx';
 import DefaultLayout from './components/DefaultLayout.jsx';
 import GuestLayout from './components/GuestLayout.jsx';
 import NotFound from './view/NotFound.jsx';
 import Dashboard from './view/Dashboard';
 import UserForm from './view/UserForm.jsx';
+import ProduitForm from './view/ProduitForm.jsx';
+import QuestionForm from './view/QuestionForm.jsx';
+import MessageForm from './view/MessageForm.jsx';
 
 const router = createBrowserRouter([
     {
@@ -32,6 +38,42 @@ const router = createBrowserRouter([
             {
                 path: '/users/:id',
                 element: <UserForm key="userUpdate"/>
+            },
+            {
+                path: '/produits',
+                element: <Produits/>
+            },
+            {
+                path: '/produits/new',
+                element: <ProduitForm key="produitCreate"/>
+            },
+            {
+                path: '/produits/:id',
+                element: <ProduitForm key="produitUpdate"/>
+            },
+            {
+                path: '/questions',
+                element: <Questions/>
+            },
+            {
+                path: '/questions/new',
+                element: <QuestionForm key="questionCreate"/>
+            },
+            {
+                path: '/questions/:id',
+                element: <QuestionForm key="questionUpdate"/>
+            },
+            {
+                path: '/messages',
+                element: <Messages/>
+            },
+            {
+                path: '/messages/new',
+                element: <MessageForm key="messageCreate"/>
+            },
+            {
+                path: '/messages/:id',
+                element: <MessageForm key="messageUpdate"/>
             },
         ]
     },

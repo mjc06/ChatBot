@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import axiosClient from './../axios';
+import axiosClient from '../axios.js';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 
-export default function UserForm(){
+export default function MessageForm(){
     const {id} = useParams()
     const navigate = useNavigate()
     const {setNotification} = useStateContext()
-    const [user,setUser] = useState({
+    const [message,setMessage] = useState({
         id: null,
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: ''
+        content: '',
+        type: '',
+        genre: '',
     })
     const [errors,setErrors] = useState('')
     const [loading,setLoading] = useState(false)
@@ -20,10 +19,10 @@ export default function UserForm(){
     if (id) {
         useEffect(() => {
             setLoading(true)
-            axiosClient.get(`/users/${id}`)
+            axiosClient.get(`/messages/${id}`)
             .then(({data})=> {
                 setLoading(false)
-                setUser(data)
+                setMessage(data)
             })
             .catch(() => {
                 setLoading(false)
@@ -33,11 +32,11 @@ export default function UserForm(){
 
    const onSubmit = (event) => {
         event.preventDefault()
-        if (user.id) {
-            axiosClient.put(`/users/${user.id}`, user)
+        if (message.id) {
+            axiosClient.put(`/messages/${message.id}`, message)
             .then(() => {
-                setNotification('Utilisateur mis à jour avec succès')
-                navigate('/users')
+                setNotification('Message mis à jour avec succès')
+                navigate('/messages')
             })
             .catch(err => {
                 const response = err.response
@@ -46,10 +45,10 @@ export default function UserForm(){
                 }
             })
         } else {
-            axiosClient.post(`/users`, user)
+            axiosClient.post(`/messages`, message)
             .then(() => {
-                setNotification('Utilisateur ajouter avec succès')
-                navigate('/users')
+                setNotification('Message ajouter avec succès')
+                navigate('/messages')
             })
             .catch(err => {
                 const response = err.response
@@ -62,8 +61,8 @@ export default function UserForm(){
 
     return (
         <>       
-            {user.id && <h1>Mise à jour de l'utilisateur {user.name}</h1>}
-            {!user.id && <h1>Nouveau Utilisateur</h1>}
+            {message.id && <h1>Mise à jour du message de genre {message.genre}</h1>}
+            {!message.id && <h1>Nouveau message</h1>}
             <div className="card animated fadeInDown">
                 {
                     loading && (
@@ -81,10 +80,17 @@ export default function UserForm(){
                 {
                     !loading && (
                         <form onSubmit={onSubmit}>
-                            <input value={user.name} onChange={e => setUser({...user,name: e.target.value})} type='text' placeholder='Nom et prénoms' />
-                            <input value={user.email} onChange={e => setUser({...user,email: e.target.value})} type='email' placeholder='Email' />
-                            <input onChange={e => setUser({...user,password: e.target.value})} type='password' placeholder='Mot de Passe' />
-                            <input onChange={e => setUser({...user,password_confirmation: e.target.value})} type='password' placeholder='Confirmation mot de passe' />
+                            <input value={message.content} onChange={e => setMessage({...message,content: e.target.value})} type='text' placeholder='contenu du message' />
+                            <select name="type" onChange={e => setMessage({...message,type: e.target.value})}>
+                                <option selected>choisir</option>
+                                <option value="text">text</option>
+                            </select>
+                            <select name="genre" onChange={e => setMessage({...message,genre: e.target.value})}>
+                                <option selected>choisir</option>
+                                <option value="accueil">accueil</option>
+                                <option value="transfert">transfert</option>
+                                <option value="clôture">clôture</option>
+                            </select>
                             <button className='button-ajout'>Save</button>
                         </form>
                     )

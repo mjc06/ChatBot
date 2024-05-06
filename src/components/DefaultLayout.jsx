@@ -49,13 +49,14 @@ export default function DefaultLayout(){
                             <div className="dropdown">
                                 <Link to="" className="d-flex align-items-center link-body-emphasis text-decoration-none " data-bs-toggle="dropdown" aria-expanded="false">                               
                                     <button className="button-ajout">
-                                        <i className="bi bi-plus-lg" ></i>&nbsp;
-                                        Ajouter
+                                        Voir&nbsp;
+                                        <i className="bi bi-plus-lg" ></i>
                                     </button>
                                 </Link>
                                 <ul className="dropdown-menu text-small">
-                                    <li><Link className="dropdown-item" to="">Produits</Link></li>
-                                    <li><Link className="dropdown-item" to="">Questions/<br/>Reponses</Link></li>                                
+                                    <li><Link className="dropdown-item" to="/produits">Produits</Link></li>
+                                    <li><Link className="dropdown-item" to="/questions">Questions/<br/>Reponses</Link></li>                                
+                                    <li><Link className="dropdown-item" to="/messages">Messages</Link></li>                                
                                 </ul>
                             </div>
                         </div>
@@ -146,7 +147,7 @@ export default function DefaultLayout(){
             </div>
 
             {notification && 
-                <div className="btn-info">
+                <div className="notification">
                     {notification}
                 </div>
             }

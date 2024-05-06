@@ -1,57 +1,60 @@
 import { useState, useEffect } from 'react';
-import axiosClient from './../axios';
+import axiosClient from '../axios';
 import { Link } from 'react-router-dom';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 
-export default function Users(){
-    const [users, setUsers] = useState([]);
+export default function Questions(){
+    const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const {setNotification} = useStateContext()
 
     useEffect(() => {
-        getUsers()
+        getQuestions()
     }, [])
 
     const onDelete = (p) => {
-        if(window.confirm('Vous êtes sure de supprimer cet utilisateur?')) {
+        if(window.confirm('Vous êtes sure de supprimer cette question?')) {
             return
         }
 
-        axiosClient.delete(`/users/${p.id}`)
+        axiosClient.delete(`/questions/${p.id}`)
         .then(() => {
-            setNotification('Utilisateur supprimer avec succès')
-            getUsers()
+            setNotification('Question supprimer avec succès')
+            getQuestions()
         })
     }
-    const getUsers = async() => {
+    const getQuestions = async() => {
         setLoading(true)
-        await axiosClient.get('/users')
+        await axiosClient.get('/questions')
         .then(({data}) => {
             setLoading(false)
-            setUsers(data.data)
+            setQuestions(data.data)
         })
     } 
 
     return (
         <>       
             <div className='d-flex justify-content-between align-items-center'>
-                <h1>Utilisateurs</h1>
-                <Link to='/users/new' className='btn-add'>Ajouter un membre</Link>
+                <h1>Questions/Reponses</h1>
+                <Link to='/questions/new' className='btn-add'>Ajouter</Link>
             </div>
             <div className='card text-center animated fadeInDown'>
                 <table>
                     <thead>
                         <th>Id</th>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Date de création</th>
+                        <th>question</th>
+                        <th>reponse</th>
+                        <th>categorie</th>
+                        <th>langue</th>
+                        <th>statut</th>
+                        <th>date de création</th>
                         <th>Actions</th>
                     </thead>
                     {
                         loading &&
                         <tbody>
                             <tr>
-                                <td colSpan="5" className="text-center">
+                                <td colSpan="10" className="text-center">
                                     Chargement...
                                 </td>
                             </tr>
@@ -60,15 +63,19 @@ export default function Users(){
                     {
                         !loading &&
                         <tbody>
-                            {users.map(p => (
+                            {questions.map(p => (
                                 <tr key={p.id}>
                                     <td>{p.id}</td>
-                                    <td>{p.name}</td>
-                                    <td>{p.email}</td>
+                                    <td>{p.quetion}</td>
+                                    <td>{p.reponse}</td>
+                                    <td>{p.categorie}</td>
+                                    <td>{p.langue}</td>
+                                    <td>{p.statut_question}</td>
                                     <td>{p.created_at}</td>
+
                                     <td>
-                                        <Link to={'/users/'+p.id} className='btn-edit'>Edit</Link>&nbsp;
-                                        <button onClick={(ev) => onDelete(p)} className="btn-delete">Delete</button>
+                                        <Link to={'/questions/'+p.id} className='btn-edit'>Editer</Link>&nbsp;
+                                        <button onClick={(ev) => onDelete(p)} className="btn-delete">Supprimer</button>
                                     </td>
                                 </tr>
                             ))}

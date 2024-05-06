@@ -1,50 +1,51 @@
 import { useState, useEffect } from 'react';
-import axiosClient from './../axios';
+import axiosClient from '../axios';
 import { Link } from 'react-router-dom';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 
-export default function Users(){
-    const [users, setUsers] = useState([]);
+export default function Messages(){
+    const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const {setNotification} = useStateContext()
 
     useEffect(() => {
-        getUsers()
+        getMessages()
     }, [])
 
     const onDelete = (p) => {
-        if(window.confirm('Vous êtes sure de supprimer cet utilisateur?')) {
+        if(window.confirm('Vous êtes sure de supprimer ce message?')) {
             return
         }
 
-        axiosClient.delete(`/users/${p.id}`)
+        axiosClient.delete(`/messages/${p.id}`)
         .then(() => {
-            setNotification('Utilisateur supprimer avec succès')
-            getUsers()
+            setNotification('Message supprimer avec succès')
+            getMessages()
         })
     }
-    const getUsers = async() => {
+    const getMessages = async() => {
         setLoading(true)
-        await axiosClient.get('/users')
+        await axiosClient.get('/messages')
         .then(({data}) => {
             setLoading(false)
-            setUsers(data.data)
+            setMessages(data.data)
         })
     } 
 
     return (
         <>       
             <div className='d-flex justify-content-between align-items-center'>
-                <h1>Utilisateurs</h1>
-                <Link to='/users/new' className='btn-add'>Ajouter un membre</Link>
+                <h1>Messages</h1>
+                <Link to='/messages/new' className='btn-add'>Ajouter</Link>
             </div>
             <div className='card text-center animated fadeInDown'>
                 <table>
                     <thead>
                         <th>Id</th>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Date de création</th>
+                        <th>content</th>
+                        <th>type</th>
+                        <th>genre</th>
+                        <th>date de création</th>
                         <th>Actions</th>
                     </thead>
                     {
@@ -60,15 +61,17 @@ export default function Users(){
                     {
                         !loading &&
                         <tbody>
-                            {users.map(p => (
+                            {messages.map(p => (
                                 <tr key={p.id}>
                                     <td>{p.id}</td>
-                                    <td>{p.name}</td>
-                                    <td>{p.email}</td>
+                                    <td>{p.content}</td>
+                                    <td>{p.type}</td>
+                                    <td>{p.genre}</td>
                                     <td>{p.created_at}</td>
+
                                     <td>
-                                        <Link to={'/users/'+p.id} className='btn-edit'>Edit</Link>&nbsp;
-                                        <button onClick={(ev) => onDelete(p)} className="btn-delete">Delete</button>
+                                        <Link to={'/messages/'+p.id} className='btn-edit'>Editer</Link>&nbsp;
+                                        <button onClick={(ev) => onDelete(p)} className="btn-delete">Supprimer</button>
                                     </td>
                                 </tr>
                             ))}

@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
-import axiosClient from './../axios';
+import axiosClient from '../axios.js';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 
-export default function UserForm(){
+export default function QuestionForm(){
     const {id} = useParams()
     const navigate = useNavigate()
     const {setNotification} = useStateContext()
-    const [user,setUser] = useState({
+    const [question,setQuestion] = useState({
         id: null,
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: ''
+        question: '',
+        reponse: '',
+        categorie: '',
+        langue: '',
+        statut_question: '',
     })
     const [errors,setErrors] = useState('')
     const [loading,setLoading] = useState(false)
@@ -20,10 +21,10 @@ export default function UserForm(){
     if (id) {
         useEffect(() => {
             setLoading(true)
-            axiosClient.get(`/users/${id}`)
+            axiosClient.get(`/questions/${id}`)
             .then(({data})=> {
                 setLoading(false)
-                setUser(data)
+                setQuestion(data)
             })
             .catch(() => {
                 setLoading(false)
@@ -33,11 +34,11 @@ export default function UserForm(){
 
    const onSubmit = (event) => {
         event.preventDefault()
-        if (user.id) {
-            axiosClient.put(`/users/${user.id}`, user)
+        if (question.id) {
+            axiosClient.put(`/questions/${question.id}`, question)
             .then(() => {
-                setNotification('Utilisateur mis à jour avec succès')
-                navigate('/users')
+                setNotification('Question mis à jour avec succès')
+                navigate('/questions')
             })
             .catch(err => {
                 const response = err.response
@@ -46,10 +47,10 @@ export default function UserForm(){
                 }
             })
         } else {
-            axiosClient.post(`/users`, user)
+            axiosClient.post(`/questions`, question)
             .then(() => {
-                setNotification('Utilisateur ajouter avec succès')
-                navigate('/users')
+                setNotification('Question ajouter avec succès')
+                navigate('/questions')
             })
             .catch(err => {
                 const response = err.response
@@ -62,8 +63,8 @@ export default function UserForm(){
 
     return (
         <>       
-            {user.id && <h1>Mise à jour de l'utilisateur {user.name}</h1>}
-            {!user.id && <h1>Nouveau Utilisateur</h1>}
+            {question.id && <h1>Mise à jour de la question {question.nom}</h1>}
+            {!question.id && <h1>Nouvelle Question</h1>}
             <div className="card animated fadeInDown">
                 {
                     loading && (
@@ -81,10 +82,11 @@ export default function UserForm(){
                 {
                     !loading && (
                         <form onSubmit={onSubmit}>
-                            <input value={user.name} onChange={e => setUser({...user,name: e.target.value})} type='text' placeholder='Nom et prénoms' />
-                            <input value={user.email} onChange={e => setUser({...user,email: e.target.value})} type='email' placeholder='Email' />
-                            <input onChange={e => setUser({...user,password: e.target.value})} type='password' placeholder='Mot de Passe' />
-                            <input onChange={e => setUser({...user,password_confirmation: e.target.value})} type='password' placeholder='Confirmation mot de passe' />
+                            <input value={question.question} onChange={e => setQuestion({...question,question: e.target.value})} type='text' placeholder='question' />
+                            <input value={question.reponse} onChange={e => setQuestion({...question,reponse: e.target.value})} type='text' placeholder='reponse' />
+                            <input value={question.categorie} onChange={e => setQuestion({...question,categorie: e.target.value})} type='text' placeholder='categorie' />
+                            <input value={question.langue} onChange={e => setQuestion({...question,langue: e.target.value})} type='text' placeholder='langue' />
+                            <input value={question.statut_question} onChange={e => setQuestion({...question,statut_question: e.target.value})} type='text' placeholder='Tapez active or non active' />
                             <button className='button-ajout'>Save</button>
                         </form>
                     )

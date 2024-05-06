@@ -36,6 +36,22 @@ input:focus {
     border-color: rgb(235, 71, 35);
 }
 
+select {
+    outline: 0;
+    background: #ffffff;
+    width: 100%;
+    border: 2px solid #e6e6e6;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+select:focus {
+    border-color: rgb(235, 71, 35);
+}
+
 .btn,
 .btn-add,
 .btn-edit,

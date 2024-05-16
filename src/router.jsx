@@ -1,7 +1,9 @@
 import {createBrowserRouter, Navigate} from 'react-router-dom';
 import Login from './view/Login.jsx';
 import Signup from './view/Signup.jsx';
+import SignupChat from './view/SignupChat.jsx';
 import Users from './view/Users.jsx';
+import Chat from './view/Chat.jsx';
 import Produits from './view/Produits.jsx';
 import Messages from './view/Messages.jsx';
 import Questions from './view/Questions.jsx';
@@ -21,7 +23,7 @@ const router = createBrowserRouter([
         children: [            
             {
                 path: '/',
-                element: <Navigate to='users'/>
+                element: <Navigate to='dashboard'/>
             },
             {
                 path: '/dashboard',
@@ -75,12 +77,16 @@ const router = createBrowserRouter([
                 path: '/messages/:id',
                 element: <MessageForm key="messageUpdate"/>
             },
+            {
+                path: '/support/client',
+                element: <Chat/>
+            },  
         ]
     },
     {
         path: '/',
         element: <GuestLayout />,
-        children: [      
+        children: [  
             {
                 path: '/login',
                 element: <Login/>
@@ -89,8 +95,12 @@ const router = createBrowserRouter([
                 path: '/signup',
                 element: <Signup/>
             },
+            {
+                path: '/signup-chat',
+                element: <SignupChat/>
+            },
         ]
-    },
+    },  
     {
         path: '*',
         element: <NotFound/>

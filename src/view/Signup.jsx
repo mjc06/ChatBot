@@ -11,16 +11,19 @@ export default function Signup(){
     const passwordConfirmationRef = useRef()
     const [errors,setErrors] = useState()
     const {setUser, setToken} = useStateContext()
+    const csrfToken = () => axiosClient.get('http://chatbot-client.test/sanctum/csrf-cookie');
 
-    const onSubmit = (event) => {
+    const onSubmit = async(event) => {
         event.preventDefault()
         const info = {
             name: nameRef.current.value,
             email: emailRef.current.value,
             password: passwordRef.current.value,
             password_confirmation: passwordConfirmationRef.current.value,
+            type: 'admin',
         }
 
+        await csrfToken()
         axiosClient.post('/signup',info)
         .then(({data}) => {
             setUser(data.user)

@@ -1,49 +1,49 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import axiosClient from './../axios';
+import axiosClient from '../axios.js';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 
-export default function Login(){
+
+export default function SignupChat(){
+    const nameRef = useRef()
     const emailRef = useRef()
     const passwordRef = useRef()
-    const [errors,setErrors] = useState(null)
+    const passwordConfirmationRef = useRef()
+    const [errors,setErrors] = useState()
     const {setUser, setToken} = useStateContext()
     const csrfToken = () => axiosClient.get('http://chatbot-client.test/sanctum/csrf-cookie');
 
+
     const onSubmit = async(event) => {
         event.preventDefault()
-
         const info = {
+            name: nameRef.current.value,
             email: emailRef.current.value,
             password: passwordRef.current.value,
+            password_confirmation: passwordConfirmationRef.current.value,
+            type: 'user',
         }
 
         await csrfToken()
-        axiosClient.post('/login',info)
+        axiosClient.post('/signup',info)
         .then(({data}) => {
             setUser(data.user)
             setToken(data.token)
         })
         .catch(err => {
-            const response = error.response
+            const response = err.response
             if (response && response.status === 422) {
-                if (response.data.errors){
-                    setErrors(response.data.errors)
-                }
-                else {
-                    setErrors({
-                        email: [response.data.message]
-                    })
-                }
+                console.log(response.data.errors);
+                setErrors(response.data.errors)
             }
         })
-          
     }
+    
     return (
         <div className="login-signup-form animated fadeInDown">
             <div className="form">
                 <form onSubmit={onSubmit}>
-                    <h1 className="title">Se connecter</h1>
+                    <h1 className="title">S'inscrire</h1>
                     {
                         errors && <div className="alert">
                             {Object.keys(errors).map(key => (
@@ -51,11 +51,13 @@ export default function Login(){
                             ))}
                         </div>
                     }
-                    <input ref={emailRef} type='email' placeholder='email' />
-                    <input ref={passwordRef} type='password' placeholder='Password' />
-                    <button className='btn btn-block'>Connexion</button>
+                    <input ref={nameRef} type='text' placeholder='Nom et prénoms' />
+                    <input ref={emailRef} type='email' placeholder='Email' />
+                    <input ref={passwordRef} type='password' placeholder='Mot de Passe' />
+                    <input ref={passwordConfirmationRef} type='password' placeholder='Confirmation mot de passe' />
+                    <button className='btn btn-block'>S'inscrire</button>
                     <p className='message' >
-                        S'inscrire? <Link to='/signup'>Créer un compte</Link>
+                        Déjà membre? <Link to='/login'>Se connecter</Link>
                     </p>
                 </form>
             </div>

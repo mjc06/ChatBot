@@ -2,48 +2,64 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Navigate } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
-import axiosClient from '../axios.js';
+import axiosClient from './../axios';
 
-export default function ChatAssistant(){
-    // const [myUser,setMyUser] = useState({
-    //     name: 'user_xxxx' + Math.ceil(Math.random() * 3600 * 0.2 - 6 + 1),
-    //     email: 'user' + Math.ceil(Math.random() * 3600 * 0.2 - 6 + 1) + '@xxx.com',
-    //     password: 'Abcd@x0.',
-    //     password_confirmation: 'Abcd@x0.',
-    //     type: 'user',
-    //     session_id: null,
-    // });
-    const [session,setSession] = useState({
-        id: 1,
-    });
-    const [message,setMessage] = useState({        
+export default function Chat(){
+    const {user, token, setUser, setToken} = useStateContext()
+    const [chatClient,setChatClient] = useState({        
         id: null,
         content: '',
         type: 'text',
         genre: 'simple',
-        user_id: null,
-        session_id: null,
+        user_id: user ? user.id : null,
+        session_id: user ? user.session_id : null,
         statut: 'envoyé',
         auteur: 'client'
     });
-    const [chatService,setChatService] = useState({        
-        id: null,
-        content: '',
-        type: 'text',
-        genre: 'simple',
-        user_id: null,
-        session_id: null,
-        statut: 'Reçu',
-        auteur: 'bot'
+    const [chatService,setChatService] = useState({
+        elementA:{
+            id: null,
+            content: '',
+            type: 'text',
+            genre: 'simple',
+            user_id: null,
+            session_id: user ? user.session_id : null,
+            statut: 'envoyé',
+            auteur: 'bot'
+        },
+        elementB:{
+            id: null,
+            content: '',
+            type: 'text',
+            genre: 'simple',
+            user_id: null,
+            session_id: user ? user.session_id : null,
+            statut: 'envoyé',
+            auteur: 'bot'
+        },
+        elementC:{
+            id: null,
+            content: '',
+            type: 'text',
+            genre: 'simple',
+            user_id: null,
+            session_id: user ? user.session_id : null,
+            statut: 'envoyé',
+            auteur: 'bot'
+        }
     });
     const [loading,setLoading] = useState(false);
     const [statut, setStatut] = useState(false);
     const [chatMan,setChatMan] = useState([]);
     const [chatUser,setChatUser] = useState([]);
-    const [errors,setErrors] = useState('')
-    const {user, token, setUser, setToken} = useStateContext()
-    const chatEndRef = useRef(null)
+    const [errors,setErrors] = useState('');
+    const [displayMessage,setDisplayMessage] = useState(null);
+    const chatEndRef = useRef(null);
+    const [statutRedirectClient,setStatutRedirectClient] = useState(false);
+    const [loadingDiscussion,setLoadingDiscussion] = useState(false);
     const csrfToken = () => axiosClient.get('http://chatbot-client.test/sanctum/csrf-cookie');
+
+
 
     
     useEffect(() => {
@@ -52,9 +68,48 @@ export default function ChatAssistant(){
         }
     }, []);      
 
+    // useEffect(() => {
+    //     const getAllMessageInDiscussion = async() => {
+    //         // setLoadingDiscussion(true)
+    //         try {
+    //             const { data } = await axiosClient.get(`/sessions/messages/${user.session_id}`)
+    //             console.log(data);
+
+    //             // setLoading(false)
+    //             data.messages.forEach(element => {
+    //                 if (element.auteur === 'client') {
+    //                     setChatUser(prev => [
+    //                         ...prev, 
+    //                         {
+    //                             id: Math.ceil(Math.random() * 3600),
+    //                             ask: element.content,
+    //                         }
+    //                     ]);
+    //                 }
+    //                  else {
+    //                     setChatUser(prev => {
+    //                         if (prev.length > 0) {
+    //                             const updatedChatUser = [...prev];
+    //                             updatedChatUser[updatedChatUser.length - 1].answer = element.content;
+    //                             return updatedChatUser;
+    //                         }
+    //                         return prev;
+    //                     });
+    //                 }
+    //             });           
+    //         } catch (error) {
+    //             console.error('Error saving user message:', error);
+    //         }
+    //     }
+    //     getAllMessageInDiscussion()
+    // }, []);
+
     useEffect(() => {
         scrollToBottom();
     }, [chatUser]);      
+
+
+    // console.log(user);
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({behavior: 'smooth'})
@@ -77,131 +132,40 @@ export default function ChatAssistant(){
         document.querySelector('.my-card').classList.remove('fadeInDown')
     }
 
-    // useEffect(() => 0
-    //     const fetch = async() => {
-    //         await axiosClient.post('/botman', {
-    //             driver: 'web'
-    //         })
-    //         .then(({data}) => {
-    //             setTimeout(() => {
-    //                 setChatUser([
-    //                     ...chatUser, 
-    //                     {
-    //                         id: Math.ceil(Math.random(12) * 3600),
-    //                         ask: '',
-    //                         answer: data.messages[1].text,
-    //                     }
-    //                 ])
-    //             }, 2000);
-
-    //             setChatService({
-    //                 ...chatService, content: data.messages[1].text, 
-    //             })
-    //         })
-    //         .catch(err => {
-    //             const response = err.response
-    //             if (response && response.status === 422) {
-    //                 setErrors(response.data.errors)
-    //             }
-    //         })
-
-    //     }    
-    //     fetch()
-
-    //     if(chatService.content !== '') {
-    //         axiosClient.post('/messages', chatService)
-    //         .then(({data}) => {
-    //             setChatService({
-    //                 ...chatService, 
-    //                 content: '',
-    //                 user_id: null,
-    //                 session_id: null,
-    //             })
-    //         })
-    //         .catch(err => {
-    //             const response = err.response
-    //             if (response && response.status === 422) {
-    //                 setErrors(response.data.errors)
-    //             }
-    //         })
-    //     }
-    // },[])
-
-
     const onSubmitChat = async(e) => {
         e.preventDefault()
-        setMessage({...message, user_id: user.id})
-        console.log(user.id)
         
         await csrfToken()
-        try {
-            const { data } = await axiosClient.post('/botman',{
-                driver: "web",
-                userId: user.id,
-                message: message.content,
-            });
-
-            console.log(data)
-
-            if(data.messages[0].additionalParameters) {
-                setChatService({
-                    ...chatService, content: data.messages[0].text, 
-                    session_id: data.messages[0].additionalParameters.session_id,
-                })
-            }
-            else {
-                setChatService({
-                    ...chatService, content: data.messages[0].text, 
-                })
-            }    
-
-            setTimeout(() => {
-                setChatUser([
-                    ...chatUser, 
-                    {
-                        id: Math.ceil(Math.random(12) * 3600),
-                        ask: message.content,
-                        answer: data.messages[0].text,
-                    }
-                ])
-            }, 0);
-
-            setTimeout(() => {
-                setLoading(true)
-            }, 3000);
-            
-            setMessage({...message, session_id: data.messages[0].additionalParameters.session_id})
-            
-        } catch (error) {
-            console.error('Error saving user message:', error);
-        }
 
         try {
-            const { data } = await axiosClient.post('/messages', message);
+            setChatClient({
+                ...chatClient,
+                auteur: 'editeur',
+            })
+            const { data } = await axiosClient.post('/messages', chatClient);
             
-            setMessage({
-                ...message, 
+            setChatClient({
+                ...chatClient, 
                 content: '',
             })
         } catch (error) {
             console.error('Error saving user message:', error);
         }
 
-
-        if(chatService.content !== '') {
-            try {
-                const { data } = await axiosClient.post('/messages', chatService);
-
-                setChatService({
-                    ...chatService, 
-                    content: '',
-                })
-            } catch (error) {
-                console.error('Error saving user message:', error);
-            }
-
+        try {
+            setChatClient({
+                ...chatClient,
+                auteur: 'editeur',
+            })
+            const { data } = await axiosClient.post('/messages', chatClient);
+            
+            setChatClient({
+                ...chatClient, 
+                content: '',
+            })
+        } catch (error) {
+            console.error('Error saving user message:', error);
         }
-
     }
 
     return (
@@ -220,7 +184,7 @@ export default function ChatAssistant(){
                     <div className='my-card-body'>                    
                         {
                             chatUser.map(msg => 
-                                <div key={msg.id}>                            
+                                (<div key={msg.id}>                            
                                     {
                                         msg.ask && 
                                         (<div className='mcb2'>
@@ -230,13 +194,49 @@ export default function ChatAssistant(){
                                     }
 
                                     {
-                                        (msg.answer && loading) &&
-                                        (<div className='mcb1'>
-                                            <i className='bi bi-person-circle text-warning'></i>&nbsp;
-                                            <p className='' >{msg.answer}</p>
-                                        </div> )   
+                                        (msg.answer && (displayMessage == 1) && loading) &&
+                                        (
+                                            <div className='mcb1'>
+                                                <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                <p className='' >{msg.answer}</p>
+                                            </div> 
+                                        )
                                     }
-                                </div>
+                                    {
+                                        (msg.answer && msg.answerA && (displayMessage == 2) && loading) &&
+                                        (
+                                            <>
+                                                <div className='mcb1'>
+                                                    <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                    <p className='' >{msg.answer}</p>
+                                                </div> 
+                                                <div className='mcb1'>
+                                                    <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                    <p className='' >{msg.answerA}</p>
+                                                </div> 
+                                            </>
+                                        )
+                                    }
+                                    {
+                                        (msg.answer && msg.answerA && msg.answerB && (displayMessage === 3) && loading) &&
+                                        (
+                                            <>
+                                                <div className='mcb1'>
+                                                    <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                    <p className='' >{msg.answer}</p>
+                                                </div> 
+                                                <div className='mcb1'>
+                                                    <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                    <p className='' >{msg.answerA}</p>
+                                                </div> 
+                                                <div className='mcb1'>
+                                                    <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                    <p className='' >{msg.answerB}</p>
+                                                </div> 
+                                            </>
+                                        )
+                                    }
+                                </div>)
                             )
                         }
                         <div ref={chatEndRef} />
@@ -246,7 +246,7 @@ export default function ChatAssistant(){
 
                     <form className='my-card-footer' onSubmit={onSubmitChat}>
                         <div className='mcf1'>
-                            <input type='text' name='content' value={message.content} onChange={e => setMessage({...message,content: e.target.value})} placeholder='Tapez votre message' />
+                            <input type='text' name='content' value={chatClient.content} onChange={e => setChatClient({...chatClient,content: e.target.value})} placeholder='Tapez votre message' />
                         </div>
                         <div className='mcf2'>
                             <i type="submit" className='bi bi-send-fill'></i>
@@ -281,8 +281,9 @@ export default function ChatAssistant(){
 
 
 
-
-
+// Bonjour et bienvenue dans votre espace chat client, Je suis chat man! Avez-vous une question qui aurait besoin de réponses ? (Répondez par Oui ou Non)
+// Je ne pourrais vous satisfaire sur ce point. Patientez un instant, je vous met en contact avec l'un de nos conseillers clientèle pour une meilleure assistance. Merci!
+// Je suis heureux de vous avoir puis aidez. Vous êtes la bienvenue pour tout autre préoccupation. Merci et à la prochaine !
 
 
 

@@ -7,6 +7,7 @@ import {useStateContext} from '../contexts/ContextProvider.jsx'
 export default function Signup(){
     const nameRef = useRef()
     const emailRef = useRef()
+    const typeRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmationRef = useRef()
     const [errors,setErrors] = useState()
@@ -18,9 +19,9 @@ export default function Signup(){
         const info = {
             name: nameRef.current.value,
             email: emailRef.current.value,
+            type: typeRef.current.value,
             password: passwordRef.current.value,
             password_confirmation: passwordConfirmationRef.current.value,
-            type: 'admin',
         }
 
         await csrfToken()
@@ -52,6 +53,9 @@ export default function Signup(){
                     }
                     <input ref={nameRef} type='text' placeholder='Nom et prénoms' />
                     <input ref={emailRef} type='email' placeholder='Email' />
+                    <select className='d-none' disabled="disabled" ref={typeRef} placeholder='type'>
+                        <option selected defaultvalue="admin">admin</option>
+                    </select>
                     <input ref={passwordRef} type='password' placeholder='Mot de Passe' />
                     <input ref={passwordConfirmationRef} type='password' placeholder='Confirmation mot de passe' />
                     <button className='btn btn-block'>S'inscrire</button>

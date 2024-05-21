@@ -55,7 +55,7 @@ export default function Login(){
                     <input ref={passwordRef} type='password' placeholder='Password' />
                     <button className='btn btn-block'>Connexion</button>
                     <p className='message' >
-                        S'inscrire? <Link to='/signup'>Créer un compte</Link>
+                        S'inscrire? <Link to='/signup-chat'>Créer un compte</Link>
                     </p>
                 </form>
             </div>

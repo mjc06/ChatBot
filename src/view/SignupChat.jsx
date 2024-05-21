@@ -7,6 +7,7 @@ import {useStateContext} from '../contexts/ContextProvider.jsx'
 export default function SignupChat(){
     const nameRef = useRef()
     const emailRef = useRef()
+    const typeRef = useRef()
     const passwordRef = useRef()
     const passwordConfirmationRef = useRef()
     const [errors,setErrors] = useState()
@@ -19,9 +20,9 @@ export default function SignupChat(){
         const info = {
             name: nameRef.current.value,
             email: emailRef.current.value,
+            type: typeRef.current.value,
             password: passwordRef.current.value,
             password_confirmation: passwordConfirmationRef.current.value,
-            type: 'user',
         }
 
         await csrfToken()
@@ -37,6 +38,7 @@ export default function SignupChat(){
                 setErrors(response.data.errors)
             }
         })
+        
     }
     
     return (
@@ -53,6 +55,9 @@ export default function SignupChat(){
                     }
                     <input ref={nameRef} type='text' placeholder='Nom et prénoms' />
                     <input ref={emailRef} type='email' placeholder='Email' />
+                    <select disabled="disabled" ref={typeRef} placeholder='type'>
+                        <option selected defaultvalue="user">user</option>
+                    </select>
                     <input ref={passwordRef} type='password' placeholder='Mot de Passe' />
                     <input ref={passwordConfirmationRef} type='password' placeholder='Confirmation mot de passe' />
                     <button className='btn btn-block'>S'inscrire</button>

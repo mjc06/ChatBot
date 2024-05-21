@@ -9,7 +9,7 @@ export default function DefaultLayout(){
     const {user,token, notification, setUser,setToken} = useStateContext()
 
     if(!token) {
-        return <Navigate to={'/signup-chat'} />
+        return <Navigate to={'/login'} />
     }
 
     const onLogOut = (event) => {

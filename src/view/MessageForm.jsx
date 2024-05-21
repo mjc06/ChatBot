@@ -12,6 +12,7 @@ export default function MessageForm(){
         content: '',
         type: '',
         genre: '',
+        auteur: '',
     })
     const [errors,setErrors] = useState('')
     const [loading,setLoading] = useState(false)
@@ -84,6 +85,12 @@ export default function MessageForm(){
                             <select name="type" onChange={e => setMessage({...message,type: e.target.value})}>
                                 <option selected>choisir</option>
                                 <option value="text">text</option>
+                            </select>
+                            <select name="auteur" onChange={e => setMessage({...message,auteur: e.target.value})}>
+                                <option selected>choisir</option>
+                                <option value="editeur">editeur</option>
+                                <option value="bot">bot</option>
+                                <option value="client">client</option>
                             </select>
                             <select name="genre" onChange={e => setMessage({...message,genre: e.target.value})}>
                                 <option selected>choisir</option>

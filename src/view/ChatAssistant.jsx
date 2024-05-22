@@ -16,37 +16,35 @@ export default function Chat(){
         statut: 'envoyé',
         auteur: 'client'
     });
-    const [chatService,setChatService] = useState({
-        elementA:{
-            id: null,
-            content: '',
-            type: 'text',
-            genre: 'simple',
-            user_id: null,
-            session_id: user ? user.session_id : null,
-            statut: 'envoyé',
-            auteur: 'bot'
-        },
-        elementB:{
-            id: null,
-            content: '',
-            type: 'text',
-            genre: 'simple',
-            user_id: null,
-            session_id: user ? user.session_id : null,
-            statut: 'envoyé',
-            auteur: 'bot'
-        },
-        elementC:{
-            id: null,
-            content: '',
-            type: 'text',
-            genre: 'simple',
-            user_id: null,
-            session_id: user ? user.session_id : null,
-            statut: 'envoyé',
-            auteur: 'bot'
-        }
+    const [chatServiceA,setChatServiceA] = useState({
+        id: null,
+        content: '',
+        type: 'text',
+        genre: 'simple',
+        user_id: null,
+        session_id: user ? user.session_id : null,
+        statut: 'envoyé',
+        auteur: 'bot'
+    });
+    const [chatServiceB,setChatServiceB] = useState({
+        id: null,
+        content: '',
+        type: 'text',
+        genre: 'simple',
+        user_id: null,
+        session_id: user ? user.session_id : null,
+        statut: 'envoyé',
+        auteur: 'bot'
+    });
+    const [chatServiceC,setChatServiceC] = useState({
+        id: null,
+        content: '',
+        type: 'text',
+        genre: 'simple',
+        user_id: null,
+        session_id: user ? user.session_id : null,
+        statut: 'envoyé',
+        auteur: 'bot'
     });
     const [loading,setLoading] = useState(false);
     const [statut, setStatut] = useState(false);
@@ -68,41 +66,41 @@ export default function Chat(){
         }
     }, []);      
 
-    // useEffect(() => {
-    //     const getAllMessageInDiscussion = async() => {
-    //         // setLoadingDiscussion(true)
-    //         try {
-    //             const { data } = await axiosClient.get(`/sessions/messages/${user.session_id}`)
-    //             console.log(data);
+    useEffect(() => {
+        const getAllMessageInDiscussion = async() => {
+            // setLoadingDiscussion(true)
+            try {
+                const { data } = await axiosClient.get(`/sessions/messages/${user.session_id}`)
+                console.log(data);
 
-    //             // setLoading(false)
-    //             data.messages.forEach(element => {
-    //                 if (element.auteur === 'client') {
-    //                     setChatUser(prev => [
-    //                         ...prev, 
-    //                         {
-    //                             id: Math.ceil(Math.random() * 3600),
-    //                             ask: element.content,
-    //                         }
-    //                     ]);
-    //                 }
-    //                  else {
-    //                     setChatUser(prev => {
-    //                         if (prev.length > 0) {
-    //                             const updatedChatUser = [...prev];
-    //                             updatedChatUser[updatedChatUser.length - 1].answer = element.content;
-    //                             return updatedChatUser;
-    //                         }
-    //                         return prev;
-    //                     });
-    //                 }
-    //             });           
-    //         } catch (error) {
-    //             console.error('Error saving user message:', error);
-    //         }
-    //     }
-    //     getAllMessageInDiscussion()
-    // }, []);
+                // setLoading(false)
+                data.messages.forEach(element => {
+                    if (element.auteur === 'client') {
+                        setChatUser(prev => [
+                            ...prev, 
+                            {
+                                id: Math.ceil(Math.random() * 3600),
+                                ask: element.content,
+                            }
+                        ]);
+                    }
+                     else {
+                        setChatUser(prev => {
+                            if (prev.length > 0) {
+                                const updatedChatUser = [...prev];
+                                updatedChatUser[updatedChatUser.length - 1].answer = element.content;
+                                return updatedChatUser;
+                            }
+                            return prev;
+                        });
+                    }
+                });           
+            } catch (error) {
+                console.error('Error saving user message:', error);
+            }
+        }
+        getAllMessageInDiscussion()
+    }, []);
 
     useEffect(() => {
         scrollToBottom();
@@ -137,35 +135,182 @@ export default function Chat(){
         
         await csrfToken()
 
-        try {
-            setChatClient({
-                ...chatClient,
-                auteur: 'editeur',
-            })
-            const { data } = await axiosClient.post('/messages', chatClient);
+        if(!statutRedirectClient) {
+            try {
+                const { data } = await axiosClient.post('/botman',{
+                    driver: "web",
+                    userId: user.id,
+                    message: chatClient.content,
+                });
+    
+                console.log(data.messages)
+                  
+    
+                if(data.messages.length == 1) {                    
+                    setDisplayMessage(1)
+
+                    if(data.messages[0].additionalParameters.stopChatMan){
+                        setStatutRedirectClient(true)
+                    }
+
+                    setTimeout(() => {
+                        setChatServiceA({
+                            ...chatServiceA, 
+                            content: data.messages[0].text, 
+                        })
+                    }, 0);
+        
+                    setTimeout(() => {
+                        setChatUser([
+                            ...chatUser, 
+                            {
+                                id: Math.ceil(Math.random(12) * 3600),
+                                ask: chatClient.content,
+                                answer: data.messages[0].text,
+                            }
+                        ])
+                    }, 0);
+                } else if(data.messages.length == 2) {
+                    setDisplayMessage(2)
+                    
+                    setTimeout(() => {
+                        setChatServiceA({
+                            ...chatServiceA, 
+                            content: data.messages[0].text, 
+                        })
+                        setChatServiceB({
+                            ...chatServiceB, 
+                            content: data.messages[1].text, 
+                        })
+                    }, 0);
+        
+                    setTimeout(() => {
+                        setChatUser([
+                            ...chatUser, 
+                            {
+                                id: Math.ceil(Math.random(12) * 3600),
+                                ask: chatClient.content,
+                                answer: data.messages[0].text,
+                                answerA: data.messages[1].text,
+                            }
+                        ])
+                    }, 0);
+                } else if(data.messages.length == 3) {
+                    setDisplayMessage(3);
+
+                    setTimeout(() => {
+                        setChatServiceA({
+                            ...chatServiceA, 
+                            content:  data.messages[0].text, 
+                        })
+                        setChatServiceB({
+                            ...chatServiceB, 
+                            content:  data.messages[1].text, 
+                        })
+                        setChatServiceC({
+                            ...chatServiceC, 
+                            content: data.messages[2].text, 
+                        })
+                    }, 0);
+        
+                    setTimeout(() => {
+                        setChatUser([
+                            ...chatUser, 
+                            {
+                                id: Math.ceil(Math.random(12) * 3600),
+                                ask: chatClient.content,
+                                answer: data.messages[0].text,
+                                answerA: data.messages[1].text,
+                                answerB: data.messages[2].text,
+                            }
+                        ])
+                    }, 0);
+                    console.log(chatUser);
+                }
+    
+                setTimeout(() => {
+                    setLoading(true)
+                }, 3000);
+                
+                
+            } catch (error) {
+                console.error('Error saving user message:', error);
+            }
+
+    
+            try {
+                const { data } = await axiosClient.post('/messages', chatClient);
+                
+                setChatClient({
+                    ...chatClient, 
+                    content: '',
+                })
+            } catch (error) {
+                console.error('Error saving user message:', error);
+            }
             
-            setChatClient({
-                ...chatClient, 
-                content: '',
-            })
-        } catch (error) {
-            console.error('Error saving user message:', error);
+    
+            
+            if(chatServiceA.content != '') {
+                try {
+                    const { data } = await axiosClient.post('/messages', chatServiceA);
+    
+                    console
+                    setChatServiceA({
+                        ...chatServiceA, 
+                        content: '',
+                    })
+                } catch (error) {
+                    console.error('Error saving user message:', error);
+                }
+    
+            }
+        
+            if(chatServiceB.content != '') {
+                try {
+                    const { data } = await axiosClient.post('/messages', chatServiceB);
+    
+                    setChatServiceB({
+                        ...chatServiceB, 
+                        content: '',
+                    })
+                } catch (error) {
+                    console.error('Error saving user message:', error);
+                }
+    
+            }
+        
+            if(chatServiceC.content != '') {
+                try {
+                    const { data } = await axiosClient.post('/messages', chatServiceC);
+    
+                    setChatServiceC({
+                        ...chatServiceC, 
+                        content: '',
+                    })
+                } catch (error) {
+                    console.error('Error saving user message:', error);
+                }
+    
+            }
+            
+        }
+        else {
+    
+            try {
+                const { data } = await axiosClient.post('/messages', chatClient);
+                
+                setChatClient({
+                    ...chatClient, 
+                    content: '',
+                })
+            } catch (error) {
+                console.error('Error saving user message:', error);
+            }
+
         }
 
-        try {
-            setChatClient({
-                ...chatClient,
-                auteur: 'editeur',
-            })
-            const { data } = await axiosClient.post('/messages', chatClient);
-            
-            setChatClient({
-                ...chatClient, 
-                content: '',
-            })
-        } catch (error) {
-            console.error('Error saving user message:', error);
-        }
+
     }
 
     return (

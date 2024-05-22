@@ -2,7 +2,7 @@ import {useStateContext} from '../contexts/ContextProvider.jsx'
 import { Navigate, Link } from 'react-router-dom';
 
 export default function Dashboard(){
-    const {user,token,setToke,setUser} = useStateContext()
+    const {user,token,setToken,setUser} = useStateContext()
 
     return (
         <div>

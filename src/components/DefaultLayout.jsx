@@ -110,12 +110,12 @@ export default function DefaultLayout(){
                                 <div className="d-flex flex-column flex-shrink-0 p-3">
                                     <ul className="nav nav-pills flex-column mb-auto">
                                         
-                                        <li>
+                                        {/* <li>
                                             <Link to="/dashboard" className="nav-link link-body-emphasis">
                                                 <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#speedometer2"/></svg>
                                                 Dashboard
                                             </Link>
-                                        </li>
+                                        </li> */}
                                         {
                                             user.type == 'admin' && 
                                             <li>
@@ -131,12 +131,12 @@ export default function DefaultLayout(){
                                                 Produits
                                             </Link>
                                         </li>
-                                        <li>
+                                        {/* <li>
                                             <Link to="/sessions" className="nav-link link-body-emphasis">
                                                 <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#table"/></svg>
                                                 Session
                                             </Link>
-                                        </li>
+                                        </li> */}
                                         <li>
                                             <Link to="/questions" className="nav-link link-body-emphasis">
                                                 <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#grid"/></svg>

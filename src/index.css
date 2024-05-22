@@ -87,7 +87,7 @@ select:focus {
     background-color: #b72424;
 }
 .btn-edit {
-    background-color: #fff;
+    /* background-color: #b3b3b3; */
 }
 
 .btn-logout {
@@ -148,8 +148,8 @@ table > tbody > tr > td {
 
 .notification {
     position: fixed;
-    right: 1rem;
-    bottom: 1rem;
+    top: 25%;
+    left: 50%;
     z-index: 300;
     padding: 1rem 1.5rem;
     background-color: #00a762;

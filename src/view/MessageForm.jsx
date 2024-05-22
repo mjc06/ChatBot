@@ -80,26 +80,30 @@ export default function MessageForm(){
 
                 {
                     !loading && (
-                        <form onSubmit={onSubmit}>
-                            <input value={message.content} onChange={e => setMessage({...message,content: e.target.value})} type='text' placeholder='contenu du message' />
-                            <select name="type" onChange={e => setMessage({...message,type: e.target.value})}>
-                                <option selected>choisir</option>
-                                <option value="text">text</option>
-                            </select>
-                            <select name="auteur" onChange={e => setMessage({...message,auteur: e.target.value})}>
-                                <option selected>choisir</option>
-                                <option value="editeur">editeur</option>
-                                <option value="bot">bot</option>
-                                <option value="client">client</option>
-                            </select>
-                            <select name="genre" onChange={e => setMessage({...message,genre: e.target.value})}>
-                                <option selected>choisir</option>
-                                <option value="accueil">accueil</option>
-                                <option value="transfert">transfert</option>
-                                <option value="clôture">clôture</option>
-                            </select>
-                            <button className='button-ajout'>Save</button>
-                        </form>
+                        <div className="login-signup-form animated fadeInDown">
+                            <div  className='form'>
+                                <form onSubmit={onSubmit}>
+                                    <input value={message.content} onChange={e => setMessage({...message,content: e.target.value})} type='text' placeholder='contenu du message' />
+                                    <select name="type" onChange={e => setMessage({...message,type: e.target.value})}>
+                                        <option selected>choisir</option>
+                                        <option value="text">text</option>
+                                    </select>
+                                    <select name="auteur" onChange={e => setMessage({...message,auteur: e.target.value})}>
+                                        <option selected>choisir</option>
+                                        <option value="editeur">editeur</option>
+                                        <option value="bot">bot</option>
+                                        <option value="client">client</option>
+                                    </select>
+                                    <select name="genre" onChange={e => setMessage({...message,genre: e.target.value})}>
+                                        <option selected>choisir</option>
+                                        <option value="accueil">accueil</option>
+                                        <option value="transfert">transfert</option>
+                                        <option value="clôture">clôture</option>
+                                    </select>
+                                    <button className='button-ajout'>Save</button>
+                                </form>
+                            </div>
+                        </div>
                     )
                 }
             </div>

@@ -4,6 +4,7 @@ import Signup from './view/Signup.jsx';
 import SignupChat from './view/SignupChat.jsx';
 import Users from './view/Users.jsx';
 import Chat from './view/Chat.jsx';
+import Session from './view/Session.jsx';
 import Produits from './view/Produits.jsx';
 import Messages from './view/Messages.jsx';
 import Questions from './view/Questions.jsx';
@@ -80,6 +81,10 @@ const router = createBrowserRouter([
             {
                 path: '/support/client',
                 element: <Chat/>
+            },  
+            {
+                path: '/sessions',
+                element: <Session/>
             },  
         ]
     },

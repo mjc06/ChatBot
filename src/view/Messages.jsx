@@ -42,7 +42,7 @@ export default function Messages(){
                 <table>
                     <thead>
                         <th>Id</th>
-                        <th>content</th>
+                        {/* <th>content</th> */}
                         <th>type</th>
                         <th>genre</th>
                         <th>date de création</th>
@@ -64,14 +64,14 @@ export default function Messages(){
                             {messages.map(p => (
                                 <tr key={p.id}>
                                     <td>{p.id}</td>
-                                    <td>{p.content}</td>
+                                    {/* <td>{p.content}</td> */}
                                     <td>{p.type}</td>
                                     <td>{p.genre}</td>
                                     <td>{p.created_at}</td>
 
                                     <td>
                                         <Link to={'/messages/'+p.id} className='btn-edit'>Editer</Link>&nbsp;
-                                        <button onClick={(ev) => onDelete(p)} className="btn-delete">Supprimer</button>
+                                        {/* <button onClick={(ev) => onDelete(p)} className="btn-delete">Supprimer</button> */}
                                     </td>
                                 </tr>
                             ))}

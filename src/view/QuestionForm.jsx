@@ -81,14 +81,18 @@ export default function QuestionForm(){
 
                 {
                     !loading && (
-                        <form onSubmit={onSubmit}>
-                            <input value={question.question} onChange={e => setQuestion({...question,question: e.target.value})} type='text' placeholder='question' />
-                            <input value={question.reponse} onChange={e => setQuestion({...question,reponse: e.target.value})} type='text' placeholder='reponse' />
-                            <input value={question.categorie} onChange={e => setQuestion({...question,categorie: e.target.value})} type='text' placeholder='categorie' />
-                            <input value={question.langue} onChange={e => setQuestion({...question,langue: e.target.value})} type='text' placeholder='langue' />
-                            <input value={question.statut_question} onChange={e => setQuestion({...question,statut_question: e.target.value})} type='text' placeholder='Tapez active or non active' />
-                            <button className='button-ajout'>Save</button>
-                        </form>
+                        <div className="login-signup-form animated fadeInDown">
+                            <div  className='form'>
+                                <form onSubmit={onSubmit}>
+                                    <input value={question.question} onChange={e => setQuestion({...question,question: e.target.value})} type='text' placeholder='question' />
+                                    <input value={question.reponse} onChange={e => setQuestion({...question,reponse: e.target.value})} type='text' placeholder='reponse' />
+                                    <input value={question.categorie} onChange={e => setQuestion({...question,categorie: e.target.value})} type='text' placeholder='categorie' />
+                                    <input value={question.langue} onChange={e => setQuestion({...question,langue: e.target.value})} type='text' placeholder='langue' />
+                                    <input value={question.statut_question} onChange={e => setQuestion({...question,statut_question: e.target.value})} type='text' placeholder='Tapez active or non active' />
+                                    <button className='button-ajout'>Save</button>
+                                </form>
+                            </div>
+                        </div>
                     )
                 }
             </div>

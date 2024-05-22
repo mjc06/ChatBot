@@ -37,8 +37,8 @@ export default function DefaultLayout(){
                     <div className="d-flex justify-content-between align-items-center p-2 mb-3 bg-white border-none sticky-top box-shadow-header">
                         <div className="flex-grow-5">
                             <Link to="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                                <svg className="bi pe-none me-2" width="40" height="32"><use xlinkHref="#bootstrap"/></svg>
-                                <span className="fs-4">Chatbot Client</span>
+                                {/* <svg className="bi pe-none me-2" width="40" height="32"><use xlinkHref="#bootstrap"/></svg> */}
+                                <span className="fs-4">Support client</span>
                             </Link>
                         </div>
                         <div className="flex-grow-2">
@@ -58,9 +58,9 @@ export default function DefaultLayout(){
                                             </button>
                                         </Link>
                                         <ul className="dropdown-menu text-small">
-                                            <li><Link className="dropdown-item" to="/produits">Produits</Link></li>
-                                            <li><Link className="dropdown-item" to="/questions">Questions/<br/>Reponses</Link></li>                                
-                                            <li><Link className="dropdown-item" to="/messages">Messages</Link></li>                                
+                                            <li><Link className="dropdown-item" to="/produits/new">AJouter Produits</Link></li>
+                                            <li><Link className="dropdown-item" to="/questions/new"> AJouter Questions/<br/>Reponses</Link></li>                                
+                                            <li><Link className="dropdown-item" to="/messages/new">AJouter Messages</Link></li>                                
                                         </ul>
                                     </div>
                                 </div>
@@ -116,16 +116,31 @@ export default function DefaultLayout(){
                                                 Dashboard
                                             </Link>
                                         </li>
+                                        {
+                                            user.type == 'admin' && 
+                                            <li>
+                                                <Link to="/messages" className="nav-link link-body-emphasis">
+                                                    <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#grid"/></svg>
+                                                    Messages
+                                                </Link>
+                                            </li>
+                                        }
                                         <li>
-                                            <Link to="" className="nav-link link-body-emphasis">
+                                            <Link to="/produits" className="nav-link link-body-emphasis">
                                                 <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#grid"/></svg>
-                                                Article
+                                                Produits
                                             </Link>
                                         </li>
                                         <li>
-                                            <Link to="" className="nav-link link-body-emphasis">
+                                            <Link to="/sessions" className="nav-link link-body-emphasis">
                                                 <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#table"/></svg>
                                                 Session
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link to="/questions" className="nav-link link-body-emphasis">
+                                                <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#grid"/></svg>
+                                                FAQ
                                             </Link>
                                         </li>
                                         <li>

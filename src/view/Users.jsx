@@ -68,7 +68,7 @@ export default function Users(){
                                     <td>{p.created_at}</td>
                                     <td>
                                         <Link to={'/users/'+p.id} className='btn-edit'>Edit</Link>&nbsp;
-                                        <button onClick={(ev) => onDelete(p)} className="btn-delete">Delete</button>
+                                        {/* <button onClick={(ev) => onDelete(p)} className="btn-delete">Delete</button> */}
                                     </td>
                                 </tr>
                             ))}

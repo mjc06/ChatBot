@@ -82,15 +82,19 @@ export default function ProduitForm(){
 
                 {
                     !loading && (
-                        <form onSubmit={onSubmit}>
-                            <input value={produit.nom} onChange={e => setProduit({...produit,nom: e.target.value})} type='text' placeholder='Nom du produit' />
-                            <input value={produit.description} onChange={e => setProduit({...produit,description: e.target.value})} type='text' placeholder='descriptioon' />
-                            <input value={produit.categorie} onChange={e => setProduit({...produit,categorie: e.target.value})} type='text' placeholder='categorie' />
-                            <input value={produit.prix} onChange={e => setProduit({...produit,prix: e.target.value})} type='text' placeholder='prix' />
-                            <input value={produit.marque} onChange={e => setProduit({...produit,marque: e.target.value})} type='text' placeholder='marque du produit' />
-                            <input value={produit.lien_redirection} onChange={e => setProduit({...produit,lien_redirection: e.target.value})} type='text' placeholder='lien_redirection' />
-                            <button className='button-ajout'>Save</button>
-                        </form>
+                        <div className="login-signup-form animated fadeInDown">
+                            <div  className='form'>
+                                <form onSubmit={onSubmit}>
+                                    <input value={produit.nom} onChange={e => setProduit({...produit,nom: e.target.value})} type='text' placeholder='Nom du produit' />
+                                    <input value={produit.description} onChange={e => setProduit({...produit,description: e.target.value})} type='text' placeholder='descriptioon' />
+                                    <input value={produit.categorie} onChange={e => setProduit({...produit,categorie: e.target.value})} type='text' placeholder='categorie' />
+                                    <input value={produit.prix} onChange={e => setProduit({...produit,prix: e.target.value})} type='text' placeholder='prix' />
+                                    <input value={produit.marque} onChange={e => setProduit({...produit,marque: e.target.value})} type='text' placeholder='marque du produit' />
+                                    <input value={produit.lien_redirection} onChange={e => setProduit({...produit,lien_redirection: e.target.value})} type='text' placeholder='lien_redirection' />
+                                    <button className='button-ajout'>Save</button>
+                                </form>
+                            </div>
+                        </div>
                     )
                 }
             </div>

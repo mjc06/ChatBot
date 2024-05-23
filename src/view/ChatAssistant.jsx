@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import {useStateContext} from '../contexts/ContextProvider.jsx'
 import axiosClient from './../axios';
 
-export default function Chat(){
+export default function ChatAssistant(){
     const {user, token, setUser, setToken} = useStateContext()
     const [chatClient,setChatClient] = useState({        
         id: null,
@@ -67,40 +67,18 @@ export default function Chat(){
     }, []);      
 
     useEffect(() => {
-        const getAllMessageInDiscussion = async() => {
-            // setLoadingDiscussion(true)
-            try {
-                const { data } = await axiosClient.get(`/sessions/messages/${user.session_id}`)
-                console.log(data);
-
-                // setLoading(false)
-                data.messages.forEach(element => {
-                    if (element.auteur === 'client') {
-                        setChatUser(prev => [
-                            ...prev, 
-                            {
-                                id: Math.ceil(Math.random() * 3600),
-                                ask: element.content,
-                            }
-                        ]);
-                    }
-                     else {
-                        setChatUser(prev => {
-                            if (prev.length > 0) {
-                                const updatedChatUser = [...prev];
-                                updatedChatUser[updatedChatUser.length - 1].answer = element.content;
-                                return updatedChatUser;
-                            }
-                            return prev;
-                        });
-                    }
-                });           
-            } catch (error) {
-                console.error('Error saving user message:', error);
-            }
-        }
         getAllMessageInDiscussion()
     }, []);
+
+    const getAllMessageInDiscussion = async() => {
+        // setLoadingDiscussion(true)
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        console.log(chatHistory)
+        chatHistory.forEach(message => {
+            chatUser(message)
+        });            
+    }
 
     useEffect(() => {
         scrollToBottom();
@@ -143,7 +121,7 @@ export default function Chat(){
                     message: chatClient.content,
                 });
     
-                console.log(data.messages)
+                console.log(data.messages[0])
                   
     
                 if(data.messages.length == 1) {                    
@@ -160,16 +138,14 @@ export default function Chat(){
                         })
                     }, 0);
         
-                    setTimeout(() => {
-                        setChatUser([
-                            ...chatUser, 
-                            {
-                                id: Math.ceil(Math.random(12) * 3600),
-                                ask: chatClient.content,
-                                answer: data.messages[0].text,
-                            }
-                        ])
-                    }, 0);
+                    // const message = {
+                    //     id: Date.now(),
+                    //     ask: chatClient.content,
+                    //     answer: data.messages[0].text
+                    // }
+
+                    // saveConversationA(message)
+
                 } else if(data.messages.length == 2) {
                     setDisplayMessage(2)
                     
@@ -184,17 +160,15 @@ export default function Chat(){
                         })
                     }, 0);
         
-                    setTimeout(() => {
-                        setChatUser([
-                            ...chatUser, 
-                            {
-                                id: Math.ceil(Math.random(12) * 3600),
-                                ask: chatClient.content,
-                                answer: data.messages[0].text,
-                                answerA: data.messages[1].text,
-                            }
-                        ])
-                    }, 0);
+                    const message = {
+                        id: Date.now(),
+                        ask: chatClient.content,
+                        answer: data.messages[0].text,
+                        answerA: data.messages[1].text,
+                    }        
+
+                    saveConversationB(message)
+
                 } else if(data.messages.length == 3) {
                     setDisplayMessage(3);
 
@@ -212,20 +186,16 @@ export default function Chat(){
                             content: data.messages[2].text, 
                         })
                     }, 0);
-        
-                    setTimeout(() => {
-                        setChatUser([
-                            ...chatUser, 
-                            {
-                                id: Math.ceil(Math.random(12) * 3600),
-                                ask: chatClient.content,
-                                answer: data.messages[0].text,
-                                answerA: data.messages[1].text,
-                                answerB: data.messages[2].text,
-                            }
-                        ])
-                    }, 0);
-                    console.log(chatUser);
+
+                    const message = {
+                        id: Date.now(),
+                        ask: chatClient.content,
+                        answer: data.messages[0].text,
+                        answerA: data.messages[1].text,
+                        answerB: data.messages[2].text
+                    }        
+
+                    saveConversationC(message)
                 }
     
                 setTimeout(() => {
@@ -255,7 +225,6 @@ export default function Chat(){
                 try {
                     const { data } = await axiosClient.post('/messages', chatServiceA);
     
-                    console
                     setChatServiceA({
                         ...chatServiceA, 
                         content: '',
@@ -311,6 +280,30 @@ export default function Chat(){
         }
 
 
+    }
+    
+    const saveConversationA = (message) => {
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        chatHistory.push(message);
+
+        sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    const saveConversationB = (message) => {
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        chatHistory.push(message);
+ 
+        sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    const saveConversationC = (message) => {
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        chatHistory.push(message);
+
+        sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     }
 
     return (

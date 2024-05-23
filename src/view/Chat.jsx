@@ -6,39 +6,43 @@ import axiosClient from './../axios';
 
 export default function Chat(){
     const {user, token, setUser, setToken} = useStateContext()
-    const [chatClient,setChatClient] = useState({
+    const [chatClient,setChatClient] = useState({        
+        id: null,
         content: '',
         type: 'text',
         genre: 'simple',
         user_id: user ? user.id : null,
-        session_id: user.id ? user.session_id : null,
+        session_id: user ? user.session_id : null,
         statut: 'envoyé',
         auteur: 'client'
     });
     const [chatServiceA,setChatServiceA] = useState({
+        id: null,
         content: '',
         type: 'text',
         genre: 'simple',
         user_id: null,
-        session_id: user.id ? user.session_id : null,
+        session_id: user ? user.session_id : null,
         statut: 'envoyé',
         auteur: 'bot'
     });
     const [chatServiceB,setChatServiceB] = useState({
+        id: null,
         content: '',
         type: 'text',
         genre: 'simple',
         user_id: null,
-        session_id: user.id ? user.session_id : null,
+        session_id: user ? user.session_id : null,
         statut: 'envoyé',
         auteur: 'bot'
     });
     const [chatServiceC,setChatServiceC] = useState({
+        id: null,
         content: '',
         type: 'text',
         genre: 'simple',
         user_id: null,
-        session_id: user.id ? user.session_id : null,
+        session_id: user ? user.session_id : null,
         statut: 'envoyé',
         auteur: 'bot'
     });
@@ -49,7 +53,6 @@ export default function Chat(){
     const [errors,setErrors] = useState('');
     const [displayMessage,setDisplayMessage] = useState(null);
     const chatEndRef = useRef(null);
-    const [chatData,setChatData] = useState([]);
     const [statutRedirectClient,setStatutRedirectClient] = useState(false);
     const [loadingDiscussion,setLoadingDiscussion] = useState(false);
     const csrfToken = () => axiosClient.get('http://chatbot-client.test/sanctum/csrf-cookie');
@@ -63,49 +66,29 @@ export default function Chat(){
         }
     }, []);      
 
-    useEffect(() => {
-        axiosClient.get('/user')
-        .then(({data}) => {
-            setUser(data)
-        })
-    }, [])
-
     // useEffect(() => {
     //     const getAllMessageInDiscussion = async() => {
-    //         // setLoadingDiscussion(true)
-    //         try {
-    //             const { data } = await axiosClient.get(`/sessions/messages/${user ? user.session_id : null}`)
-    //             console.log(data);
+    //         setLoadingDiscussion(true)
+    //         let chatHistory = await JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+    
+    //         console.log(chatHistory)
+    //         setTimeout(() => {
+    //             chatHistory.forEach(message => {
+    //                 chatUser.push(message)
+    //             });            
+    //         }, 3000);
 
-    //             // setLoading(false)
-    //             data.converse.forEach(element => {
-    //                 console.log(chatUser)
-                    
-    //                 setTimeout(() => {
-    //                     setChatUser([
-    //                         ...chatUser, 
-    //                         {
-    //                             id: element.id,
-    //                             ask: (element.ask != null) ? element.ask : '',
-    //                             answer: (element.answer_one != null) ? element.answer_one : '',
-    //                             answerA : (element.answer_two != null) ? element.answer_two : '',
-    //                             answerB: (element.answer_three != null) ? element.answer_three : ''
-    //                         }
-    //                     ])
-    //                 }, 1000);        
-    //             });           
-    //         } catch (error) {
-    //             console.error('Error saving user message:', error);
-    //         }
+    //         setLoadingDiscussion(false)
     //     }
+
     //     getAllMessageInDiscussion()
     // }, []);
+
+    
 
     useEffect(() => {
         scrollToBottom();
     }, [chatUser]);      
-
-    // console.log(chatData);
 
 
     // console.log(user);
@@ -137,114 +120,117 @@ export default function Chat(){
         await csrfToken()
 
         if(!statutRedirectClient) {
-            // setTimeout(() => {
-            //     setChatClient(prev => ({
-            //         ...prev,
-            //         user_id: user ? user.id : null,
-            //         session_id: user ? user.session_id : null,
-            //     }))
-            // }, 0);
-            // console.log(chatClient);
-                        
             try {
                 const { data } = await axiosClient.post('/botman',{
                     driver: "web",
                     userId: user.id,
                     message: chatClient.content,
                 });
-
-                console.log(data.messages)
+    
+                console.log(data.messages[0])
                   
+    
                 if(data.messages.length == 1) {                    
                     setDisplayMessage(1)
 
                     if(data.messages[0].additionalParameters.stopChatMan){
-                        setStatutRePrev(true)
+                        setStatutRedirectClient(true)
                     }
 
                     setTimeout(() => {
-                        setChatServiceA(prev => ({
-                            ...prev, 
+                        setChatServiceA({
+                            ...chatServiceA, 
                             content: data.messages[0].text, 
-                            session_id: user.id ? user.session_id : null,
-                        }))
-                        console.log(chatServiceA);
+                        })
                     }, 0);
         
-                    console.log(chatServiceA);
+                    // const message = {
+                    //     id: Date.now(),
+                    //     ask: chatClient.content,
+                    //     answer: chatServiceA.content,
+                    //     displayMessage: displayMessage
+                    // }
 
-                    // setTimeout(() => {
-                    //     setChatUser([
-                    //         ...chatUser, 
-                    //         {
-                    //             id: Math.ceil(Math.random(12) * 3600),
-                    //             ask: chatClient.content,
-                    //             answer: data.messages[0].text,
-                    //         }
-                    //     ])
-                    // }, 1000);
-                    
+                    // let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+                    // chatHistory.push(message);
+
+                    // sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+
+                    // let history = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+                    // chatUser.push(history);
+
+                    setTimeout(() => {
+                        setChatUser(prev => [
+                            ...prev,
+                            {
+                                id: Date.now(),
+                                ask: chatClient.content,
+                                answer: data.messages[0].text,
+                                displayMessage: displayMessage
+                            }
+                        ])
+                    }, 1000);
+
                 } else if(data.messages.length == 2) {
                     setDisplayMessage(2)
                     
                     setTimeout(() => {
-                        setChatServiceA(prev => ({
-                            ...prev, 
-                            content: data.messages[0].text,
-                           session_id: user.id ? user.session_id : null,
-                        }))
-                        setChatServiceB(prev => ({
-                            ...prev, 
-                            content: data.messages[1].text,
-                           session_id: user.id ? user.session_id : null,
-                        }))
+                        setChatServiceA({
+                            ...chatServiceA, 
+                            content: data.messages[0].text, 
+                        })
+                        setChatServiceB({
+                            ...chatServiceB, 
+                            content: data.messages[1].text, 
+                        })
                     }, 0);
         
-                    // setTimeout(() => {
-                    //     setChatUser([
-                    //         ...chatUser, 
-                    //         {
-                    //             id: Math.ceil(Math.random(12) * 3600),
-                    //             ask: chatClient.content,
-                    //             answer: data.messages[0].text,
-                    //             answerA: data.messages[1].text,
-                    //         }
-                    //     ])
-                    // }, 1000);
-                    
+                    setTimeout(() => {
+                        setChatUser(prev => [
+                            ...prev,
+                            {
+                                id: Date.now(),
+                                ask: chatClient.content,
+                                answer: data.messages[0].text,
+                                answerA: data.messages[1].text,
+                                displayMessage: displayMessage
+                            }
+                        ])
+                    }, 1000);
+
                 } else if(data.messages.length == 3) {
                     setDisplayMessage(3);
 
                     setTimeout(() => {
-                        setChatServiceA(prev => ({
-                            ...prev, 
-                            content:  data.messages[0].text,
-                            session_id: user.id ? user.session_id : null, 
-                        }))
-                        setChatServiceB(prev => ({
-                            ...prev, 
-                            content:  data.messages[1].text,
-                            session_id: user.id ? user.session_id : null, 
-                        }))
-                        setChatServiceC(prev => ({
-                            ...prev, 
-                            content: data.messages[2].text,
-                            session_id: user.id ? user.session_id : null, 
-                        }))
+                        setChatServiceA({
+                            ...chatServiceA, 
+                            content:  data.messages[0].text, 
+                        })
+                        setChatServiceB({
+                            ...chatServiceB, 
+                            content:  data.messages[1].text, 
+                        })
+                        setChatServiceC({
+                            ...chatServiceC, 
+                            content: data.messages[2].text, 
+                        })
                     }, 0);
-        
-                    // setTimeout(() => {
-                    //     setChatUser([
-                    //         ...chatUser, 
-                    //         {
-                    //             id: Math.ceil(Math.random(12) * 3600),
-                    //             ask: chatClient.content,
-                    //             answer: data.messages[0].text,
-                    //             answerA: data.messages[1].text,
-                    //             answerB: data.messages[2].text,
-                    //         }
-                    //     ])
-                    // }, 1000);
+
+                    setTimeout(() => {
+                        setChatUser(prev => [
+                            ...prev,
+                            {
+                                id: Date.now(),
+                                ask: chatClient.content,
+                                answer: data.messages[0].text,
+                                answerA: data.messages[1].text,
+                                answerB: data.messages[2].text,
+                                displayMessage: displayMessage
+                            }
+                        ])
+                    }, 1000);
                 }
     
                 setTimeout(() => {
@@ -256,107 +242,22 @@ export default function Chat(){
                 console.error('Error saving user message:', error);
             }
 
-            setTimeout(() => {
-                console.log(chatClient.content)
-                console.log(chatServiceA.content)
-                console.log(chatServiceB.content)
-                console.log(chatServiceC.content)
-            }, 0);
-
-            if(displayMessage == 1 && chatServiceA.content != '') {
-                try {
-                    const { data } = await axiosClient.post('/converses', {
-                        ask: chatClient.content,
-                        answer_one: chatServiceA.content,
-                        session_id: user.id
-                    });
-
-                    setTimeout(() => {
-                        setChatUser([
-                            ...chatUser,
-                            {
-                                id: data.id,
-                                ask: (data.ask != null) ? data.ask : '',
-                                answer: (data.answer_one != null) ? data.answer_one : '',
-                            }
-                        ])
-                    }, 1000); 
-
-                } catch (error) {
-                    console.error('Error saving user message:', error);
-                }
-            }
-
-            if(displayMessage == 2 && chatServiceA.content != '' && chatServiceB.content != '') {
-                try {
-                    const { data } = await axiosClient.post('/converses', {
-                        ask: chatClient.content,
-                        answer_one: chatServiceA.content,
-                        answer_two: chatServiceB.content,
-                        session_id: user.id
-                    });
-
-                    setTimeout(() => {
-                        setChatUser([
-                            ...chatUser,
-                            {
-                                id: data.id,
-                                ask: (data.ask != null) ? data.ask : '',
-                                answer: (data.answer_one != null) ? data.answer_one : '',
-                                answerA : (data.answer_two != null) ? data.answer_two : '',
-                            }
-                        ])
-                    }, 1000); 
-
-                } catch (error) {
-                    console.error('Error saving user message:', error);
-                }
-            }
-
-            if(displayMessage == 3 && chatServiceA.content != '' && chatServiceB.content != '' && chatServiceC.content != '') {
-                try {
-                    const { data } = await axiosClient.post('/converses', {
-                        ask: chatClient.content,
-                        answer_one: chatServiceA.content,
-                        answer_two: chatServiceB.content,
-                        answer_three: chatServiceC.content,
-                        session_id: user.id
-                    });
-
-                    setTimeout(() => {
-                        setChatUser([
-                            ...chatUser,
-                            {
-                                id: data.id,
-                                ask: (data.ask != null) ? data.ask : '',
-                                answer: (data.answer_one != null) ? data.answer_one : '',
-                                answerA : (data.answer_two != null) ? data.answer_two : '',
-                                answerB: (data.answer_three != null) ? data.answer_three : ''
-                            }
-                        ])
-                    }, 1000); 
-
-                } catch (error) {
-                    console.error('Error saving user message:', error);
-                }
-            }
-
-
-
+    
             try {
                 const { data } = await axiosClient.post('/messages', chatClient);
-
+                
                 setTimeout(() => {
-                    setChatClient(prev => ({
-                        ...prev,
+                    setChatClient({
+                        ...chatClient, 
                         content: '',
-                    }))
+                    })
                 }, 0);
             } catch (error) {
                 console.error('Error saving user message:', error);
             }
-           
-          
+            
+    
+            
             if(chatServiceA.content != '') {
                 try {
                     const { data } = await axiosClient.post('/messages', chatServiceA);
@@ -365,7 +266,6 @@ export default function Chat(){
                         ...chatServiceA, 
                         content: '',
                     })
-                    
                 } catch (error) {
                     console.error('Error saving user message:', error);
                 }
@@ -399,7 +299,7 @@ export default function Chat(){
                 }
     
             }
-                        
+            
         }
         else {
     
@@ -417,6 +317,30 @@ export default function Chat(){
         }
 
 
+    }
+    
+    const saveConversationA = (message) => {
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        chatHistory.push(message);
+
+        sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    const saveConversationB = (message) => {
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        chatHistory.push(message);
+ 
+        sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    const saveConversationC = (message) => {
+        let chatHistory = JSON.parse(sessionStorage.getItem('chatHistory')) || [];
+
+        chatHistory.push(message);
+
+        sessionStorage.setItem('chatHistory', JSON.stringify(chatHistory));
     }
 
     return (
@@ -445,16 +369,18 @@ export default function Chat(){
                                     }
 
                                     {
-                                        (msg.answer && (displayMessage == 1) && loading) &&
+                                        (msg.answer && loading) &&
                                         (
-                                            <div className='mcb1'>
-                                                <i className='bi bi-person-circle text-warning'></i>&nbsp;
-                                                <p className='' >{msg.answer}</p>
-                                            </div> 
+                                            <>
+                                                <div className='mcb1'>
+                                                    <i className='bi bi-person-circle text-warning'></i>&nbsp;
+                                                    <p className='' >{msg.answer}</p>
+                                                </div> 
+                                            </>
                                         )
                                     }
                                     {
-                                        (msg.answer && msg.answerA && (displayMessage == 2) && loading) &&
+                                        (msg.answer && msg.answerA && loading) &&
                                         (
                                             <>
                                                 <div className='mcb1'>
@@ -469,7 +395,7 @@ export default function Chat(){
                                         )
                                     }
                                     {
-                                        (msg.answer && msg.answerA && msg.answerB && (displayMessage === 3) && loading) &&
+                                        (msg.answer && msg.answerA && msg.answerB && loading) &&
                                         (
                                             <>
                                                 <div className='mcb1'>
